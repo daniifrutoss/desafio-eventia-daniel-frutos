@@ -1,0 +1,24 @@
+rules:
+  - id: eventia-js-dangerous-eval
+    pattern: eval(...)
+    message: "Cuidado con eval(): coge un texto y lo ejecuta como si fuera código."
+    languages: [javascript]
+    severity: ERROR
+
+  - id: eventia-js-innerhtml
+    pattern: $EL.innerHTML = $VAL
+    message: "Cuidado con innerHTML: si entra texto de un usuario puede colar etiquetas HTML."
+    languages: [javascript]
+    severity: WARNING
+
+  - id: eventia-sql-string-concat
+    pattern-regex: SELECT.*\+
+    message: "Consulta SQL pegada con +: si el usuario mete comillas puede alterar la búsqueda."
+    languages: [javascript]
+    severity: ERROR
+
+  - id: eventia-hardcoded-demo-key
+    pattern-regex: API_KEY\s*=
+    message: "Hay una clave escrita directamente dentro del archivo."
+    languages: [javascript]
+    severity: WARNING
