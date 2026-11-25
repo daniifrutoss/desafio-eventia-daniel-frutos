@@ -10,6 +10,7 @@
     "dev:client": "npm --prefix client run dev"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.1",
     "concurrently": "^9.1.2",
     "prettier": "^3.9.10"
   }
