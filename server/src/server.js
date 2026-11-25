@@ -73,17 +73,37 @@ app.get("/api/reservations/:id", authenticate, requireLogin, (req, res) => {
 });
 app.post("/api/reservations", authenticate, requireLogin, (req, res) => {
   const { eventId, seats } = req.body;
+
+  // --- MODIFICACIÓN 1: validar datos vacíos o números no válidos ---
+  
+  const numSeats = Number(seats);
+  if (!eventId || !Number.isInteger(numSeats) || numSeats <= 0)
+    return res
+      .status(400)
+      .json({ success: false, message: "Datos de reserva no válidos" });
+
+
+  // --- FIN MODIFICACIÓN 1 ---
+
   const e = events.find((x) => x.id === Number(eventId));
   if (!e)
     return res
       .status(404)
       .json({ success: false, message: "Evento no encontrado" });
-  e.availableSeats -= Number(seats);
+
+  // --- INICIO MODIFICACIÓN 2: comprobar que no supere las plazas disponibles ---
+  if (numSeats > e.availableSeats)
+    return res
+      .status(400)
+      .json({ success: false, message: "No hay suficientes plazas disponibles" });
+  // --- FIN MODIFICACIÓN 2 ---
+
+  e.availableSeats -= numSeats;
   const r = {
     id: getNextReservationId(),
     userId: req.user.id,
     eventId: e.id,
-    seats: Number(seats),
+    seats: numSeats,
     status: "confirmed",
   };
   reservations.push(r);
@@ -99,6 +119,14 @@ app.delete("/api/reservations/:id", authenticate, requireLogin, (req, res) => {
   res.json({ success: true, data: r });
 });
 app.post("/api/admin/events", authenticate, requireLogin, (req, res) => {
+
+  // --- INICIO MODIFICACIÓN 3: comprobar que el usuario sea admin ---
+  if (req.user.role !== "admin")
+    return res
+      .status(403)
+      .json({ success: false, message: "Acceso restringido" });
+  // --- FIN MODIFICACIÓN 3 ---
+
   const { title, description, date, venue, capacity } = req.body;
   const e = {
     id: Math.max(...events.map((x) => x.id)) + 1,
@@ -122,4 +150,4 @@ app.get("/api/admin/reservations", authenticate, requireLogin, (req, res) => {
 app.use((req, res) =>
   res.status(404).json({ success: false, message: "Ruta no encontrada" }),
 );
-app.listen(3000, () => console.log("Eventia API: http://localhost:3000"));
+app.listen(3000, () => console.log("Eventia API: http://localhost:3000"))
