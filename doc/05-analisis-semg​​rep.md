@@ -10,6 +10,7 @@ Para preparar el análisis desde la consola y crear las reglas en YAML me he apo
 
 Para revisar los patrones que pide el enunciado (`innerHTML`, `eval()`, consultas SQL pegadas con `+` y claves escritas en el código), creé el archivo `semgrep.yml` en la raíz del proyecto con cuatro reglas personalizadas:
 
+```yaml
 rules:
   - id: eventia-js-dangerous-eval
     pattern: eval(...)
