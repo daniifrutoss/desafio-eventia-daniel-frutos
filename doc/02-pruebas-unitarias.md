@@ -28,4 +28,4 @@ Luego he creado tres archivos dentro de `server/test/unit/` con 14 pruebas bási
 
 Al lanzar el test pasan 5 pruebas y fallan 9:
 
-![Resultado tests](poner imagen de los test)
+![Imagen de los test realizados con vitest ](../imagenes/test_reservas.PNG)
