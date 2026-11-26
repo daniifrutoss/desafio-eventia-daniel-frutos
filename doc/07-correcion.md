@@ -22,7 +22,7 @@ Con este cambio evitamos que alguien manipule la petición para mandar `-2` entr
 
 Otro fallo que vi al probar las reservas es que el servidor restaba las entradas directamente sin mirar si quedaban suficientes sitios libres en ese evento. Por eso añadí la **Modificación 2**, poniendo un `if (numSeats > e.availableSeats)` para frenar la operación si alguien pide más entradas de las que hay disponibles.
 
-![Código de control de aforo disponible en server.js](../imagenes/fase_7/modificacion2.png)
+![Código de control de aforo disponible en server.js](../imagenes/fase_7/modificacion2.PNG)
 
 De esta forma nos aseguramos de que no se reserven más plazas de las que caben en el sitio y de que el contador de aforo nunca acabe en números negativos. Al intentar pedir más entradas de las libres desde Postman, el servidor rechaza la petición con un `400 Bad Request` (`"No hay suficientes plazas disponibles"`).
 
@@ -32,7 +32,7 @@ De esta forma nos aseguramos de que no se reserven más plazas de las que caben 
 
 Para dar de alta un evento nuevo, el servidor solo pedía haber iniciado sesión (`requireLogin`), pero no miraba si la cuenta tenía permisos de administrador o era de un usuario normal. En la **Modificación 3** añadí la comprobación `if (req.user.role !== "admin")` para cortar el paso a cualquiera que no sea administrador.
 
-![Código de comprobación de rol administrador en server.js](../imagenes/fase_7/modificacion3.png)
+![Código de comprobación de rol administrador en server.js](../imagenes/fase_7/modificacion3.PNG)
 
 Así evitamos que un usuario corriente pueda publicar eventos saltándose los botones de la pantalla y mandando la petición directamente a la API. Al probarlo desde Postman con la cuenta normal de Ana (`ana@eventia.local`), el servidor ya bloquea el intento devolviendo un `403 Forbidden` (`"Acceso restringido"`).
 
