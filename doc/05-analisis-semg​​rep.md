@@ -8,12 +8,8 @@ Para preparar el análisis desde la consola y crear las reglas en YAML me he apo
 
 ## 1. Entorno, reglas y ejecución
 
-- **Versión de Semgrep:** 1.182.1
-- **Sistema:** Windows con PowerShell en Visual Studio Code
-
 Para revisar los patrones que pide el enunciado (`innerHTML`, `eval()`, consultas SQL pegadas con `+` y claves escritas en el código), creé el archivo `semgrep.yml` en la raíz del proyecto con cuatro reglas personalizadas:
 
-```yaml
 rules:
   - id: eventia-js-dangerous-eval
     pattern: eval(...)
@@ -74,48 +70,22 @@ Que Semgrep marque una línea **no demuestra automáticamente que exista una vul
 2. **Qué hace el código:** Coge la lista de eventos que manda el servidor y mete las tarjetas directamente en la página usando `list.innerHTML = items.map(...)`.
 3. **Por qué puede ser inseguro:** `innerHTML` entiende cualquier etiqueta HTML que venga dentro del texto. Como el título y la descripción los escribe una persona al crear el evento, entra texto de fuera sin limpiar.
 4. **Qué consecuencias podría tener:** **Este fallo sí es explotable de verdad**, porque se ejecuta cada vez que alguien entra a la web. Si un administrador escribe un `<script>` o una etiqueta html en el título o descripción, el navegador de cualquiera que entre a la página lo ejecutará .
+
 5. **Alternativa más segura:** Crear las etiquetas con `document.createElement` y meter los textos usando **`.textContent`**, que los muestra como texto normal sin ejecutar nada.
-
-
-
-
-6. **Comprobación tras corregir:** Si cambiamos `innerHTML` por `textContent` en `client/src/main.js` y volvemos a lanzar `semgrep scan --config semgrep.yml .`, desaparece el aviso de la línea 12.
-
-
-
-
-
-
 
 
 
 ### Hallazgo 2: Uso de `innerHTML` al mostrar las reservas
 1. **Archivo y línea de código:** `client/src/main.js` (línea 63).
 
-
 ![Revision de client/src/main.js ](../imagenes/semgrep/2.PNG)
-
-
-
 
 
 2. **Qué hace el código:** Pinta en pantalla la lista de reservas del usuario (`id`, `userId`, `eventId` y `seats`) usando `.innerHTML`.
 3. **Por qué puede ser inseguro:** Usa la misma forma de meter HTML directo en la página.
-4. **Qué consecuencias podría tener (contexto en Eventia):** Ahora mismo **no se puede explotar**, porque ahí solo se pintan números generados por el servidor y ningún texto escrito por usuarios. Aun así, si en el futuro se añade algún campo de texto libre sería un problema.
+4. **Qué consecuencias podría tener :** Ahora mismo **no se puede explotar**, porque ahí solo se pintan números generados por el servidor y ningún texto escrito por usuarios. Aun así, si en el futuro se añade algún campo de texto libre sería un problema.
 
 5. **Alternativa más segura:** Cambiarlo también por etiquetas creadas con `document.createElement("p")` y `.textContent`.
-
-![correccion de client/src/main.js ]()
-
-
-
-
-6. **Comprobación tras corregir:** Al hacer el cambio y pasar otra vez Semgrep, `client/src/main.js` ya no da ningún aviso.
-
-
-
-![test para comprobar correcion ]()
-
 
 
 ### Hallazgo 3: Uso de `eval()` para ejecutar texto
@@ -137,10 +107,6 @@ Que Semgrep marque una línea **no demuestra automáticamente que exista una vul
 
 
 
-6. **Comprobación tras corregir:** Si borramos el archivo o quitamos `eval()` y volvemos a pasar `semgrep scan --config semgrep.yml .`, la alerta desaparece.
-
-
-
 
 
 
@@ -151,17 +117,10 @@ Que Semgrep marque una línea **no demuestra automáticamente que exista una vul
 
 ![revision de erver/src/legacy/funciones_inseguras.js](../imagenes/semgrep/4.PNG)
 
-
-
-
-
 2. **Qué hace el código:** La función `buscarUsuario(nombre)` monta una búsqueda en base de datos uniendo texto con `+`: `"SELECT * FROM usuarios WHERE nombre = '" + nombre + "'"`.
 3. **Por qué puede ser inseguro:** Mezcla la orden de búsqueda con lo que escribe el usuario.
-4. **Qué consecuencias podría tener: Permitiría hacer inyección SQL (`' OR '1'='1`) para ver datos privados o saltarse filtros, pero en Eventia no es explotable** porque este archivo no se usa en ningún sitio como hemos dicho anteriormente y la aplicación ni siquiera tiene una base de datos SQL guarda todo enmemoria.
+4. **Qué consecuencias podría tener: Permitiría hacer inyección SQL  para ver datos privados o saltarse filtros, pero en Eventia no es explotable** porque este archivo no se usa en ningún sitio como hemos dicho anteriormente y la aplicación ni siquiera tiene una base de datos SQL guarda todo enmemoria.
 5. **Alternativa más segura:** Usar consultas parametrizadas (`SELECT * FROM usuarios WHERE nombre = ?`) para separar la orden del dato que escribe el usuario.
-6. **Comprobación tras corregir:** Al cambiarlo por una consulta parametrizada o borrar el fichero y lanzar de nuevo Semgrep, deja de saltar la regla `eventia-sql-string-concat`.
-
-
 
 
 ### Hallazgo 5: Clave escrita directamente en el código
@@ -182,15 +141,6 @@ Que Semgrep marque una línea **no demuestra automáticamente que exista una vul
 5. **Alternativa más segura:** Sacar la clave a un archivo `.env` (ignorado en `.gitignore` para que no suba a GitHub) y leerla con `process.env.API_KEY`.
 
 
-
-
-
-
-
-
-
-
-6. **Comprobación tras corregir:** Al quitar el texto fijo y volver a pasar `semgrep scan --config semgrep.yml .`, el resultado final baja a `0 findings`.
 
 ---
 

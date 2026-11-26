@@ -1,6 +1,6 @@
 # Pruebas E2E con Playwright
 
-En esta última fase he creado pruebas automáticas con Playwright para comprobar que toda la aplicación funciona bien de principio a fin, simulando lo que haría una persona real usando el navegador.
+En esta  fase he creado pruebas automáticas con Playwright para comprobar que toda la aplicación funciona bien de principio a fin, simulando lo que haría una persona real usando el navegador.
 
 Para preparar las pruebas y saber cómo darle las órdenes al navegador me he ayudado de la documentación oficial de [Playwright ejemplos de localizadoress](https://playwright.dev/docs/locators) y de esta guía en español de [primeros pasos y ejemplos de uso](https://www.sngular.com/es/insights/128/playwright-primeros-pasos-y-ejemplos-de-uso).
 
@@ -13,12 +13,6 @@ Playwright funciona como un robot al que hay que indicarle exactamente dónde ti
 * **Para escribir y buscar:** la barra del buscador (`#search`) y los campos de usuario y contraseña (`#password`).
 * **Para pulsar botones:** el botón de iniciar sesión (`#login-form button`) y el de publicar un evento (`#event-form button`).
 * **Para leer lo que responde la web:** la lista de eventos (`#event-list`), la barra superior donde sale quién está conectado (`#session`) y los textos de aviso (`#login-message` y `#admin-message`).
-
-
-(meter foto del html)
-
-
-
 
 
 

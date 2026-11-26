@@ -52,7 +52,7 @@ Al mirar las respuestas del servidor he visto tres cosas que están pensadas sol
 
 - **Puerta abierta a otras webs (CORS):** El servidor responde con `Access-Control-Allow-Origin: *`. Esto significa que deja que cualquier página web de fuera le pida datos. Para hacer pruebas en local viene bien, pero si subiéramos Eventia a Internet habría que cerrarlo para que solo acepte peticiones desde nuestra propia página.
 - **Faltan protecciones extra en el navegador:** El servidor no envía reglas de seguridad adicionales para proteger la pantalla (por ejemplo, para evitar que otra página meta nuestra web dentro de un marco falso para engañar a la gente).
-- **Dónde se guarda tu sesión:** Al iniciar sesión, la web guarda tu llave de acceso (`token`) en una memoria abierta del navegador (`localStorage`). Si alguien consiguiera colar un código malicioso en la página (como vimos en la fase anterior), podría leer esa llave y robarte la cuenta. En una web real habría que guardarla en una cookie cerrada a la que ningún código pueda acceder.
+- **Dónde se guarda tu sesión:** Al iniciar sesión, la web guarda la llave de acceso es decir el token en una memoria abierta del navegador (`localStorage`). Si alguien consiguiera colar un código malicioso en la página (como vimos en la fase anterior), podría leer esa llave y robarte la cuenta. En una web real habría que guardarla en una cookie cerrada a la que ningún código pueda acceder.
 
 ![Respuestas del servidor donde se ve el permiso abierto a otras webs](../imagenes/OWASP/6.PNG)
 
