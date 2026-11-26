@@ -2,7 +2,7 @@
 
 Como todavía no se puede tocar el `server.js` y el código estaba adaptado para que corriera en Express (que es la especie de servidor web que se inicia para que podamos correr la página como una web normal en localhost), he refactorizado el código un poco para adaptarlo y que funcionara bien, pero es el mismo que hay en `server.js` con pequeñas modificaciones. Lo he sacado a tres archivos aparte (`server/src/reservas.js`, `server/src/eventos.js` y `server/src/cancelar.js`) con sus funciones (`crearReserva`, `crearEvento` y `cancelarReserva`). Así las puedo probar sueltas y llamarlas con Vitest sin tener que arrancar el servidor ni montar ningún sistema aparte ni nada por el estilo. Además, así también pruebo más partes importantes de la aplicación y no solo las reservas.
 
-![ POMER IMAGEN Código refactorizado]()
+
 
 Luego he creado tres archivos dentro de `server/test/unit/` con 14 pruebas básicas en total:
 
